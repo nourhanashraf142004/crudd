@@ -1,31 +1,14 @@
 <?php
-require 'db.php';
+include 'connect.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['id'])) {
-        $id = intval($_POST['id']);
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = (int)$_GET['id'];
 
-       
-        $check = "SELECT * FROM users WHERE id = $id";
-        $result = $conn->query($check);
-
-        if ($result->num_rows > 0) {
-            
-            $sql = "DELETE FROM users WHERE id = $id";
-            if ($conn->query($sql) === TRUE) {
-                echo "✅ USER NUMBER DELEDED$id SUCCESSFULLY";
-            } else {
-                echo "❌AN ERROR OCCURED WHILE DELEDING " . $conn->error;
-            }
-        } else {
-            echo "⚠️ User With Number ID = $id NOT IN DATABASE";
-        }
-    } else {
-        echo "❌Inter Your ID Please.";
-    }
-} else {
-    echo "❌Invalid Request";
+    $stmt = $connect->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
 }
+
+header("Location: view.php");
+exit;
 ?>
-
-
