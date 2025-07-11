@@ -1,29 +1,29 @@
 <?php
-require 'db.php';
+include 'connect.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = intval($_POST["id"]);
-    $first_name = $_POST["first_name"];
-    $last_name = $_POST["last_name"];
-    $age = intval($_POST["age"]);
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
-    $check = "SELECT * FROM users WHERE id = $id";
-    $result = $conn->query($check);
+    $id         = (int)$_POST['id'];
+    $first_name = trim($_POST['first_name']);
+    $last_name  = trim($_POST['last_name']);
+    $age        = (int)$_POST['age'];
 
-    if ($result && $result->num_rows > 0) {
-        
-        $sql = "UPDATE users SET first_name='$first_name', last_name='$last_name', age=$age WHERE id=$id";
+    if (!empty($first_name) && !empty($last_name) && $age > 0 && $id > 0) {
+       
+        $stmt = $connect->prepare("UPDATE users SET first_name = ?, last_name = ?, age = ? WHERE id = ?");
+        $stmt->bind_param("ssii", $first_name, $last_name, $age, $id);
 
-        if ($conn->query($sql) === TRUE) {
-            echo "✅ done.";
+        if ($stmt->execute()) {
+            header("Location: view.php");
+            exit;
         } else {
-            echo "❌ an error " . $conn->error;
+            echo "❌failed " . $connect->error;
         }
     } else {
-        echo "⚠️ there is no user with this ID.";
+        echo "❌make sure enter value";
     }
 } else {
-    echo "❌ invaild order";
+    header("Location: view.php");
+    exit;
 }
 ?>
