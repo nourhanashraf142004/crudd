@@ -1,10 +1,10 @@
 <?php
 include 'connect.php';
 
-// جلب كل المستخدمين من قاعدة البيانات
+
 $cust = $connect->query("SELECT * FROM users");
 
-// تحديد وضع التعديل أو الإضافة
+
 $edit_id = isset($_GET['edit']) ? (int)$_GET['edit'] : null;
 $insert_mode = isset($_GET['insert']);
 ?>
