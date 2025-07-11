@@ -99,6 +99,7 @@ mysqli_close($conn);
     </div>
 
     <button type="submit">Save</button>
+    <button type="button" onclick="window.location.href='index.html'">Back to Home</button>
 </form>
 
 <?php
